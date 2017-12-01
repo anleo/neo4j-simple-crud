@@ -1,0 +1,22 @@
+version: '3'
+services:
+  app:
+    image: node:8
+    volumes:
+      - ./:/app
+    links:
+      - neo4j
+    ports:
+      - "3000:3000"
+    working_dir: /app
+    command: "node app.js"
+
+  neo4j:
+    image: neo4j:3.3
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./db/dbms:/data/dbms
+    environment:
+      NEO4J_AUTH: "none"

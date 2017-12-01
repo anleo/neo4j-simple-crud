@@ -1,0 +1,47 @@
+<h5 class="mb-2">Comments: </h5>
+
+<form [formGroup]="commentForm" novalidate>
+  <div class="row">
+    <div class="col-10">
+      <div class="form-group mb-0">
+        <div class="input-group input-group-sm">
+          <span class="input-group-addon col-3">Text</span>
+          <textarea rows="4" class="form-control" formControlName="text"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="d-flex align-items-stretch" style="height: 100%">
+        <div class="input-group input-group-sm cool-btn-wrap flex-column flex-wrap">
+          <button class="btn btn-primary btn-sm mr-2" (click)="addComment()">
+            {{commentForm.value._id ? 'Save' : 'Add'}}
+          </button>
+          <button *ngIf="commentForm.value._id" class="btn btn-warning btn-sm" (click)="resetEdit()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<hr class="mb-2">
+
+<div class="row mb-2">
+  <div class="col">
+    <ul class="list-group">
+      <li *ngFor="let comment of comments" class="list-group-item">
+        <div class="row">
+          <div class="col-8">
+            <small class="text-muted">{{comment?.comment?.properties?.createdAt | amDateFormat:'lll'}}</small>
+            <p class="small" *ngIf="comment?.comment?.properties?.text">{{comment?.comment?.properties?.text}}</p>
+          </div>
+          <div class="col-4 text-right">
+            <button class="btn btn-default btn-sm" (click)="edit(comment.comment)">Edit</button>
+            <button class="btn btn-danger btn-sm" (click)="delete(comment.comment._id)">Del</button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

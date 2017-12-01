@@ -1,0 +1,70 @@
+<div class="container">
+  <nav aria-label="breadcrumb" role="navigation" class="mb-2">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">Posts</li>
+    </ol>
+  </nav>
+
+  <div class="row mb-2 pt-2">
+    <div class="col">
+      <h4 *ngIf="postForm.value">{{postForm.value?._id ? 'Edit post' : 'Add post'}}</h4>
+      <form [formGroup]="postForm" novalidate>
+        <div class="row">
+          <div class="col-10">
+            <div class="form-group">
+              <div class="input-group input-group-sm">
+                <span class="input-group-addon col-3">Title</span>
+                <input class="form-control" formControlName="title">
+              </div>
+            </div>
+
+            <div class="form-group mb-0">
+              <div class="input-group input-group-sm">
+                <span class="input-group-addon col-3">Body</span>
+                <textarea class="form-control" formControlName="body"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="d-flex align-items-stretch" style="height: 100%">
+              <div class="input-group input-group-sm cool-btn-wrap flex-column flex-wrap">
+                <button class="btn btn-primary btn-sm mr-2" (click)="addPost()">
+                  {{postForm.value?._id ? 'Save' : 'Add'}}
+                </button>
+                <button *ngIf="postForm.value?._id" class="btn btn-warning btn-sm" (click)="resetEdit()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+  <hr>
+  <div class="row mb-2">
+    <div class="col">
+      <ul class="list-group">
+        <li *ngFor="let post of posts" class="list-group-item">
+          <div class="row">
+            <div class="col-8">
+              <small class="text-muted">{{post?.post?.properties?.createdAt | amDateFormat:'lll'}}</small>
+              <h5 *ngIf="post?.post?.properties?.title" >
+                <a href="" [routerLink]="['/posts', post.post._id]">{{post?.post?.properties?.title}}</a>
+              </h5>
+              <p class="small" *ngIf="post?.post?.properties?.body">{{post?.post?.properties?.body}}</p>
+              <small *ngIf="post?.post?.properties?.commentsCounter" class="badge badge-warning badge-pill">
+                Comments: <strong>{{post?.post?.properties?.commentsCounter}}</strong>
+              </small>
+            </div>
+            <div class="col-4 text-right">
+              <button class="btn btn-default btn-sm" (click)="editPost(post.post)">Edit</button>
+              <button class="btn btn-danger btn-sm" (click)="deletePost(post.post._id)">Del</button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,67 @@
+<div class="container">
+  <nav aria-label="breadcrumb" role="navigation" class="mb-2">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a [routerLink]="['./..']">Posts</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{post?.properties?.title}} <span class="text-muted">(#{{post?._id}})</span>
+      </li>
+    </ol>
+  </nav>
+
+  <div class="row mb-2 pt-2" *ngIf="!editMode && !loading">
+    <div class="col-8">
+      <small class="text-muted">{{post?.properties?.createdAt | amDateFormat:'lll'}}</small>
+      <h3 *ngIf="post?.properties?.title" [routerLink]="['/posts', post._id]">
+        {{post?.properties?.title}}
+      </h3>
+      <p *ngIf="post?.properties?.body">{{post?.properties?.body}}</p>
+    </div>
+    <div class="col-4 text-right">
+      <button class="btn btn-default btn-sm" (click)="setPostEdit(post); toggleEdit()">Edit</button>
+      <button class="btn btn-danger btn-sm" (click)="deletePost()">Del</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading">
+    <h1 class="text-center">Loading</h1>
+  </div>
+
+  <div class="row mb-2 pt-2" *ngIf="editMode && !loading">
+    <div class="col">
+      <form [formGroup]="postForm" novalidate>
+        <div class="row">
+          <div class="col-10">
+            <div class="form-group">
+              <div class="input-group input-group-sm">
+                <span class="input-group-addon col-3">Title</span>
+                <input class="form-control" formControlName="title">
+              </div>
+            </div>
+
+            <div class="form-group mb-0">
+              <div class="input-group input-group-sm">
+                <span class="input-group-addon col-3">Body</span>
+                <textarea class="form-control" formControlName="body"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="d-flex align-items-stretch" style="height: 100%">
+              <div class="input-group input-group-sm cool-btn-wrap flex-column flex-wrap">
+                <button class="btn btn-primary btn-sm mr-2" (click)="updatePost()">
+                  Update
+                </button>
+                <button *ngIf="postForm.value?._id" class="btn btn-warning btn-sm" (click)="toggleEdit()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <hr class="mb-2">
+  <app-comments *ngIf="post?._id" [postId]="post._id" (onDelete)="onCommentDelete($event)"></app-comments>
+</div>
