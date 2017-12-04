@@ -50,7 +50,7 @@
                 <button class="btn btn-primary btn-sm mr-2" (click)="updatePost()">
                   Update
                 </button>
-                <button *ngIf="postForm.value?._id" class="btn btn-warning btn-sm" (click)="toggleEdit()">
+                <button *ngIf="postForm?.value?._id" class="btn btn-warning btn-sm" (click)="toggleEdit()">
                   Cancel
                 </button>
               </div>
@@ -63,5 +63,5 @@
   </div>
 
   <hr class="mb-2">
-  <app-comments *ngIf="post?._id" [postId]="post._id" (onDelete)="onCommentDelete($event)"></app-comments>
+  <app-comments [postId]="post?._id" (onDelete)="onCommentDelete($event)"></app-comments>
 </div>

@@ -1,7 +1,8 @@
-// let neo4j = require('node-neo4j');
+let dbEnv = process.env.NODE_ENV === 'develop' ? 'neo4j' : 'localhost';
+let dbLink = `http://neo4j:neo4j@${dbEnv}:7474`;
 let neo4j = require('neo4j');
-// var db = new neo4j('http://neo4j:neo4j@neo4j:7474');
-let db = new neo4j.GraphDatabase('http://neo4j:neo4j@localhost:7474');
+let db = new neo4j.GraphDatabase(dbLink);
+
 let moment = require('moment');
 
 module.exports = function (app, express) {
@@ -69,7 +70,6 @@ module.exports = function (app, express) {
   });
 
   router.delete('/api/posts/:postId', function (req, res) {
-    console.log('>>>>> delete', req.params.postId)
     db.cypher({
       query: `
         MATCH (post:Post)
@@ -79,8 +79,6 @@ module.exports = function (app, express) {
         RETURN post, comment
       `
     }, (err, results) => {
-      console.log('>>>>> DELETE results', results)
-      console.log('>>>>> DELETE err', err)
       if (err) {
         return res.status(500).send(err, err && err.message);
       }
@@ -169,13 +167,11 @@ module.exports = function (app, express) {
       query: `
         MATCH (post:Post)
         WITH post
-        // OPTIONAL MATCH (post:Post)-[:ChildComment]->(comment:Comment)
         ORDER BY post.createdAt
         SET post.commentsCounter = SIZE((post)-[:ChildComment]->())
         RETURN post
       `
     }, (err, results) => {
-      console.log('>>>>> GET ALL:::', results)
       if (err) {
         return res.status(500).send(err, err && err.message);
       }
@@ -259,9 +255,6 @@ module.exports = function (app, express) {
   });
 
   router.delete('/api/comments/:commentId', function (req, res) {
-    // post 41
-    // comment 87
-
     db.cypher({
       query: `
         MATCH (comment:Comment)
@@ -271,8 +264,6 @@ module.exports = function (app, express) {
         RETURN doc
       `
     }, (err, results) => {
-      console.log('>>>>> delete err', err)
-      console.log('>>>>> delete results', results)
       if (err) {
         return res.status(500).send(err, err && err.message);
       }

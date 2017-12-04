@@ -1,15 +1,46 @@
 version: '3'
 services:
   app:
-    image: node:8
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     volumes:
-      - ./:/app
+      - .:/home
+    image: node:8
     links:
-      - neo4j
+      - "neo4j:neo4j"
     ports:
       - "3000:3000"
-    working_dir: /app
+    working_dir: /home
+    command: "nodemon -L app.js"
+    environment:
+      NODE_ENV: "develop"
+
+  app.web:
+    build: .
+    volumes:
+      - .:/home
+    image: node:8
+    links:
+      - "neo4j:neo4j"
+    ports:
+      - "3000:3000"
+    working_dir: /home
     command: "node app.js"
+    environment:
+      NODE_ENV: "develop"
+
+  web:
+    volumes:
+      - .:/home
+    image: node:8
+    links:
+      - "app.web:app.web"
+    ports:
+      - "8080:8080"
+    working_dir: /home
+    command: "npm run start.docker"
+
 
   neo4j:
     image: neo4j:3.3

@@ -9,6 +9,9 @@ app.use('/', express.static(__dirname + '/dist'));
 
 require('./app.routes')(app, express);
 
+app.set('trust proxy', true);
+app.set('trust proxy', 'loopback');
+
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
 });

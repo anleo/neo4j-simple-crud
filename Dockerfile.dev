@@ -1,0 +1,6 @@
+FROM node:8
+WORKDIR /home
+RUN apt-get update
+RUN npm install --global nodemon
+RUN npm install
+
